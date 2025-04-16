@@ -1,7 +1,5 @@
-package kkkombinator.main.DAO.Models;
+package kkkombinator.DAO.Entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
