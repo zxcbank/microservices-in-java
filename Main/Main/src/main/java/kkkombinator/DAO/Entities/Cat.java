@@ -18,21 +18,21 @@ public class Cat {
     @Getter
     private Long id;
 
-    @Column(nullable= false)
+    @Column(nullable= false, name="name")
     @Getter
     @Setter
     private String name;
 
-    @Column
+    @Column(name="birthDate")
     @Getter
     @Setter
     private LocalDate birthDate;
 
-    @Column
+    @Column(name="CatType")
     @Getter
     private String catType;
 
-    @Column
+    @Column(name="Color")
     @Getter
     private Color color;
 

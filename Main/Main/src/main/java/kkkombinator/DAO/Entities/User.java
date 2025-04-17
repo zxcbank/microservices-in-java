@@ -1,5 +1,6 @@
 package kkkombinator.DAO.Entities;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,13 +16,11 @@ public class User {
     @Getter
     private Long id;
 
-    @NotNull
     @Column(name= "username")
     @Getter
     @Setter
     private String name;
 
-    @NotNull
     @Column(name = "birthDate")
     @Getter
     @Setter
@@ -29,9 +28,6 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Cat> cats = new HashSet<>();
-    // OneToMany mappedby owner <=> 1 владелец , у него много котов.
-    // orhpanRemoval = true <=> наличие владельца это необходимое условие существование кота.
-    // cascade = CascadeType.ALL <=> одновременное изменение данных в разных таблицах (как я понял если условно имя владельца поменяется, то и в таблице с котами тоже самое будет)
 
     public User(String name, LocalDate date) {
         this.name = name;
