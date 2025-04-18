@@ -1,14 +1,22 @@
-﻿package kkkombinator.Service;
+package kkkombinator.Service;
 
 import kkkombinator.DAO.Entities.User;
 import kkkombinator.DAO.Repo.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
+@Service
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public <S extends User> S save(S entity) {

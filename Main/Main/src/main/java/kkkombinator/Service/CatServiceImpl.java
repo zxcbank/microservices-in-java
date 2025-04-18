@@ -1,14 +1,21 @@
-﻿package kkkombinator.Service;
+package kkkombinator.Service;
 
 import kkkombinator.DAO.Entities.Cat;
 import kkkombinator.DAO.Repo.CatRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class CatServiceImpl implements CatService {
 
     private CatRepository CatRepository;
 
+    @Autowired
+    public CatServiceImpl(kkkombinator.DAO.Repo.CatRepository catRepository) {
+        CatRepository = catRepository;
+    }
 
     @Override
     public <S extends Cat> S save(S entity) {

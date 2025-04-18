@@ -1,4 +1,4 @@
-﻿package kkkombinator.DAO.Entities;
+package kkkombinator.DAO.Entities;
 
 public enum Color {
     BLACK,
