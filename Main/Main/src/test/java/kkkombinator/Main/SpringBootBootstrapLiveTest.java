@@ -24,7 +24,7 @@ public class SpringBootBootstrapLiveTest {
 
     @BeforeEach
     public void setUp() {
-        API_ROOT = "http://localhost:" + port + "/api/cats";
+        API_ROOT = "http://localhost:" + port + "/cats";
         RestAssured.port = port;
     }
 

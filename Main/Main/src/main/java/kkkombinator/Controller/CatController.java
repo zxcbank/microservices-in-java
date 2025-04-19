@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import kkkombinator.Controller.Exceptions.*;
 
@@ -14,7 +15,8 @@ import java.util.Objects;
 
 
 @RestController
-@RequestMapping("/api/cats")
+@RequestMapping("/cats")
+@Validated
 public class CatController {
     private CatServiceImpl catService;
 
@@ -32,12 +34,6 @@ public class CatController {
     }
 
 
-    @GetMapping("/")
-    public String homePage(Model model) {
-        model.addAttribute("appName", appName);
-        return "home";
-    }
-
     @GetMapping("/{id}")
     public CatDTO findById(@PathVariable Long id) {
         return catService.findById(id)
@@ -49,6 +45,7 @@ public class CatController {
     public CatDTO create(@RequestBody CatDTO cat) {
         return catService.save(cat);
     }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

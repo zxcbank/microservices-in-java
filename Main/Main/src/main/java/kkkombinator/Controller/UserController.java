@@ -7,12 +7,14 @@ import kkkombinator.DAO.Entities.User;
 import kkkombinator.Service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
+@Validated
 public class UserController {
 
     @Autowired
