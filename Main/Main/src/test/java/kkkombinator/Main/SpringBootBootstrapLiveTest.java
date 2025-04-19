@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -34,7 +33,7 @@ public class SpringBootBootstrapLiveTest {
         return cat;
     }
 
-    private String createCatAsUri(Cat cat) {
+    private String createCatAsUrl(Cat cat) {
         final Response response = RestAssured.given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(cat)
@@ -52,7 +51,8 @@ public class SpringBootBootstrapLiveTest {
     @Test
     public void whenGetCreatedCatById_thenOK() {
         Cat cat = createRandomCat();
-        String location = createCatAsUri(cat);
+        String location = createCatAsUrl(cat);
+
         Response response = RestAssured.get(location);
 
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
@@ -61,8 +61,9 @@ public class SpringBootBootstrapLiveTest {
 
     @Test
     public void whenGetNotExistCatById_thenNotFound() {
-        Response response = RestAssured.get(API_ROOT + "/" + randomNumeric(4));
 
+        Response response = RestAssured.get(API_ROOT + "/" + 9000);
+        System.out.println(response.jsonPath().toString());
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());
     }
 
@@ -93,7 +94,7 @@ public class SpringBootBootstrapLiveTest {
     @Test
     public void whenDeleteCreatedCat_thenOk() {
         Cat cat = createRandomCat();
-        String location = createCatAsUri(cat);
+        String location = createCatAsUrl(cat);
         Response response = RestAssured.delete(location);
 
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());

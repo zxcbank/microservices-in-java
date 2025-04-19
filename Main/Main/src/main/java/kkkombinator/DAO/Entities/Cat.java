@@ -2,9 +2,7 @@ package kkkombinator.DAO.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
