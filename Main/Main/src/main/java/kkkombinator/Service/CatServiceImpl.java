@@ -1,79 +1,73 @@
 package kkkombinator.Service;
 
-import kkkombinator.DAO.Entities.Cat;
+import jakarta.persistence.EntityNotFoundException;
+import kkkombinator.DAO.DTO.TransformEntities;
+import kkkombinator.DAO.DTO.CatDTO;
 import kkkombinator.DAO.Repo.CatRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class CatServiceImpl implements CatService {
+@RequiredArgsConstructor
+public class CatServiceImpl {
 
-    private CatRepository CatRepository;
+    private CatRepository catRepository;
+    private TransformEntities transformer;
 
     @Autowired
-    public CatServiceImpl(kkkombinator.DAO.Repo.CatRepository catRepository) {
-        CatRepository = catRepository;
+    public CatServiceImpl(kkkombinator.DAO.Repo.CatRepository catRepository, TransformEntities transformer) {
+        this.catRepository = catRepository;
+        this.transformer = transformer;
     }
 
-    @Override
-    public <S extends Cat> S save(S entity) {
-        return CatRepository.save(entity);
+    public CatDTO save(CatDTO entity) {
+        return transformer.mapCatDto(catRepository.save(transformer.mapCat(entity)));
     }
 
-    @Override
-    public <S extends Cat> Iterable<S> saveAll(Iterable<S> entities) {
-        return CatRepository.saveAll(entities);
+    public Iterable<CatDTO> saveAll(Iterable<CatDTO> entities) {
+        return transformer.mapCatDtos(catRepository.saveAll(transformer.mapCats(entities)));
     }
 
-    @Override
-    public Optional<Cat> findById(Long id) {
-        return CatRepository.findById(id);
+    public Optional<CatDTO> findById(Long id) {
+        return Optional.ofNullable(transformer.mapCatDto(catRepository.findById(id).orElseThrow()));
     }
 
-    @Override
     public boolean existsById(Long id) {
-        return CatRepository.existsById(id);
+        return catRepository.existsById(id);
     }
 
-    @Override
-    public Iterable<Cat> findAll() {
-        return CatRepository.findAll();
+    public Iterable<CatDTO> findAll() {
+        return transformer.mapCatDtos(catRepository.findAll());
     }
 
-    @Override
-    public Iterable<Cat> findAllById(Iterable<Long> ids) {
-        return CatRepository.findAllById(ids);
+    public Iterable<CatDTO> findAllById(Iterable<Long> ids) {
+        return transformer.mapCatDtos(catRepository.findAllById(ids));
     }
 
-    @Override
     public long count() {
-        return CatRepository.count();
+        return catRepository.count();
     }
 
-    @Override
     public void deleteById(Long id) {
-        CatRepository.deleteById(id);
+        catRepository.deleteById(id);
     }
 
-    @Override
-    public void delete(Cat entity) {
-        CatRepository.delete(entity);
+    public void delete(CatDTO entity) {
+        catRepository.delete(transformer.mapCat(entity));
     }
 
-    @Override
-    public void deleteAllById(Iterable<? extends Long> ids) {
-        CatRepository.deleteAllById(ids);
+    public void deleteAllById(Iterable<Long> ids) {
+        catRepository.deleteAllById(ids);
     }
 
-    @Override
-    public void deleteAll(Iterable<? extends Cat> entities) {
-        CatRepository.deleteAll(entities);
+    public void deleteAll(Iterable<CatDTO> entities) {
+        catRepository.deleteAll(transformer.mapCats(entities));
     }
 
-    @Override
     public void deleteAll() {
-        CatRepository.deleteAll();
+        catRepository.deleteAll();
     }
 }

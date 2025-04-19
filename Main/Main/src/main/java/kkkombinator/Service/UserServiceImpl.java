@@ -1,79 +1,71 @@
 package kkkombinator.Service;
 
-import kkkombinator.DAO.Entities.User;
+import kkkombinator.DAO.DTO.TransformEntities;
+import kkkombinator.DAO.DTO.UserDTO;
 import kkkombinator.DAO.Repo.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
 @Service
-public class UserServiceImpl implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl {
 
     private UserRepository userRepository;
+    private TransformEntities transformer;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, TransformEntities transformer) {
         this.userRepository = userRepository;
+        this.transformer = transformer;
     }
 
-    @Override
-    public <S extends User> S save(S entity) {
-        return userRepository.save(entity);
+    public UserDTO save(UserDTO entity) {
+        return transformer.mapUserDto(userRepository.save(transformer.mapUser(entity)));
     }
 
-    @Override
-    public <S extends User> Iterable<S> saveAll(Iterable<S> entities) {
-        return userRepository.saveAll(entities);
+    public Iterable<UserDTO> saveAll(Iterable<UserDTO> entities) {
+        return transformer.mapUserDtos(userRepository.saveAll(transformer.mapUsers(entities)));
     }
 
-    @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> findById(Long id) {
+        return Optional.ofNullable(transformer.mapUserDto(userRepository.findById(id).orElseThrow()));
     }
 
-    @Override
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
     }
 
-    @Override
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
+    public Iterable<UserDTO> findAll() {
+        return transformer.mapUserDtos(userRepository.findAll());
     }
 
-    @Override
-    public Iterable<User> findAllById(Iterable<Long> ids) {
-        return userRepository.findAllById(ids);
+    public Iterable<UserDTO> findAllById(Iterable<Long> ids) {
+        return transformer.mapUserDtos(userRepository.findAllById(ids));
     }
 
-    @Override
     public long count() {
         return userRepository.count();
     }
 
-    @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public void delete(User entity) {
-        userRepository.delete(entity);
+    public void delete(UserDTO entity) {
+        userRepository.delete(transformer.mapUser(entity));
     }
 
-    @Override
-    public void deleteAllById(Iterable<? extends Long> ids) {
+    public void deleteAllById(Iterable<Long> ids) {
         userRepository.deleteAllById(ids);
     }
 
-    @Override
-    public void deleteAll(Iterable<? extends User> entities) {
-        userRepository.deleteAll(entities);
+    public void deleteAll(Iterable<UserDTO> entities) {
+        userRepository.deleteAll(transformer.mapUsers(entities));
     }
 
-    @Override
     public void deleteAll() {
         userRepository.deleteAll();
     }

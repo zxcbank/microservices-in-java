@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CatRepository extends CrudRepository<Cat, Long> {
+public interface CatRepository extends CrudRepository   <Cat, Long> {
     <S extends Cat> S save(S entity);
 
     <S extends Cat> Iterable<S> saveAll(Iterable<S> entities);

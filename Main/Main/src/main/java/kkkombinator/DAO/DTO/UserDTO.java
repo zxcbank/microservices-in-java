@@ -1,4 +1,4 @@
-﻿package kkkombinator.DAO.DTO;
+package kkkombinator.DAO.DTO;
 
 import kkkombinator.DAO.Entities.Cat;
 import kkkombinator.DAO.Entities.User;

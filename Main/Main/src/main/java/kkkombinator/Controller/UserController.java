@@ -2,6 +2,7 @@ package kkkombinator.Controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import kkkombinator.Controller.Exceptions.UserIdMismatchException;
+import kkkombinator.DAO.DTO.UserDTO;
 import kkkombinator.DAO.Entities.User;
 import kkkombinator.Service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +16,28 @@ import java.util.Objects;
 public class UserController {
 
     @Autowired
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+
     private UserServiceImpl userService;
 
     @GetMapping
-    public Iterable<User> findAll() {
+    public Iterable<UserDTO> findAll() {
         return userService.findAll();
     }
 
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable Long id) {
+    public UserDTO findById(@PathVariable Long id) {
         return userService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User user) {
+    public UserDTO create(@RequestBody UserDTO user) {
         return userService.save(user);
     }
 
@@ -43,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@RequestBody User user, @PathVariable Long id) {
+    public UserDTO updateUser(@RequestBody UserDTO user, @PathVariable Long id) {
         if (!Objects.equals(user.getId(), id)) {
             throw new UserIdMismatchException("miss userId");
         }
