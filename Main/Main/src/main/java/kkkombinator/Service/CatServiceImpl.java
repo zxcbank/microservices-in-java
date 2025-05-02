@@ -1,11 +1,13 @@
 package kkkombinator.Service;
 
-import jakarta.persistence.EntityNotFoundException;
 import kkkombinator.DAO.DTO.TransformEntities;
 import kkkombinator.DAO.DTO.CatDTO;
+import kkkombinator.DAO.Entities.Cat;
 import kkkombinator.DAO.Repo.CatRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,6 +25,11 @@ public class CatServiceImpl {
         this.transformer = transformer;
     }
 
+    @Bean
+    public static ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
     public CatDTO save(CatDTO entity) {
         return transformer.mapCatDto(catRepository.save(transformer.mapCat(entity)));
     }
@@ -32,7 +39,8 @@ public class CatServiceImpl {
     }
 
     public Optional<CatDTO> findById(Long id) {
-        return Optional.ofNullable(transformer.mapCatDto(catRepository.findById(id).orElseThrow()));
+        Optional<Cat> optCat = catRepository.findById(id);
+        return optCat.map(cat -> transformer.mapCatDto(cat));
     }
 
     public boolean existsById(Long id) {

@@ -3,11 +3,10 @@ package kkkombinator.Controller;
 import jakarta.persistence.EntityNotFoundException;
 import kkkombinator.DAO.DTO.CatDTO;
 import kkkombinator.Service.CatServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import kkkombinator.Controller.Exceptions.*;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/cats")
-@Validated
+@RequiredArgsConstructor
 public class CatController {
     private CatServiceImpl catService;
 
@@ -28,7 +27,7 @@ public class CatController {
     @Value("${spring.application.name}")
     String appName;
 
-    @GetMapping
+    @GetMapping("/")
     public Iterable<CatDTO> findAll() {
         return catService.findAll();
     }
@@ -36,8 +35,9 @@ public class CatController {
 
     @GetMapping("/{id}")
     public CatDTO findById(@PathVariable Long id) {
+
         return catService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
+                .orElseThrow(() -> new CatNotFoundException("Cat not found"));
     }
 
     @PostMapping
@@ -50,18 +50,15 @@ public class CatController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         catService.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new CatNotFoundException("not found cat"));
 
         catService.deleteById(id);
     }
 
-    @PutMapping("/{id}")
-    public CatDTO updateCat(@RequestBody CatDTO cat, @PathVariable Long id) {
-        if (!Objects.equals(cat.getId(), id)) {
-            throw new CatIdMismatchException("miss catId");
-        }
-        catService.findById(id)
-                .orElseThrow();
+    @PutMapping
+    public CatDTO updateCat(@RequestBody CatDTO cat) {
+        catService.findById(cat.getId())
+                .orElseThrow(() -> new CatNotFoundException("not found cat"));
         return catService.save(cat);
     }
 

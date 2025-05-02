@@ -3,25 +3,19 @@ package kkkombinator.DAO.DTO;
 import kkkombinator.DAO.Entities.Cat;
 import kkkombinator.DAO.Entities.User;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Configuration
+
+@Service
 public class TransformEntities {
 
     private final ModelMapper modelMapper;
 
     public TransformEntities(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-    }
-
-    @Bean
-    public static ModelMapper modelMapper() {
-        return new ModelMapper();
     }
 
     public CatDTO mapCatDto(Cat cat) {

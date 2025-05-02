@@ -4,7 +4,9 @@ import kkkombinator.DAO.DTO.TransformEntities;
 import kkkombinator.DAO.DTO.UserDTO;
 import kkkombinator.DAO.Repo.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

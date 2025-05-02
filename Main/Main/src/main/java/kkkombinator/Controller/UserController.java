@@ -1,20 +1,19 @@
 package kkkombinator.Controller;
 
 import jakarta.persistence.EntityNotFoundException;
-import kkkombinator.Controller.Exceptions.UserIdMismatchException;
+import kkkombinator.Controller.Exceptions.UserNotFoundException;
 import kkkombinator.DAO.DTO.UserDTO;
-import kkkombinator.DAO.Entities.User;
 import kkkombinator.Service.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")
-@Validated
+@RequiredArgsConstructor
 public class UserController {
 
     @Autowired
@@ -34,7 +33,7 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDTO findById(@PathVariable Long id) {
         return userService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
     }
 
     @PostMapping
@@ -46,17 +45,15 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         userService.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
         userService.deleteById(id);
     }
 
     @PutMapping("/{id}")
-    public UserDTO updateUser(@RequestBody UserDTO user, @PathVariable Long id) {
-        if (!Objects.equals(user.getId(), id)) {
-            throw new UserIdMismatchException("miss userId");
-        }
-        userService.findById(id)
-                .orElseThrow();
+    public UserDTO updateUser(@RequestBody UserDTO user) {
+
+        userService.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
         return userService.save(user);
     }
 
