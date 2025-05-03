@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -98,8 +97,6 @@ public class SpringBootBootstrapLiveTest {
         String location = createCatAsUrl(cat);
         System.out.println(location);
         Response response = RestAssured.delete(location);
-
-//        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatusCode());
 
         response = RestAssured.get(location);
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCode());

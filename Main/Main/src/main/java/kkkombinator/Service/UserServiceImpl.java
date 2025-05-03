@@ -1,13 +1,12 @@
 package kkkombinator.Service;
 
-import kkkombinator.DAO.DTO.TransformEntities;
 import kkkombinator.DAO.DTO.UserDTO;
+import kkkombinator.DAO.Entities.User;
 import kkkombinator.DAO.Repo.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -24,7 +23,9 @@ public class UserServiceImpl {
         this.transformer = transformer;
     }
 
+    @Transactional
     public UserDTO save(UserDTO entity) {
+
         return transformer.mapUserDto(userRepository.save(transformer.mapUser(entity)));
     }
 
@@ -33,7 +34,8 @@ public class UserServiceImpl {
     }
 
     public Optional<UserDTO> findById(Long id) {
-        return Optional.ofNullable(transformer.mapUserDto(userRepository.findById(id).orElseThrow()));
+        Optional<User> optUser = userRepository.findById(id);
+        return optUser.map(user -> transformer.mapUserDto(optUser.get()));
     }
 
     public boolean existsById(Long id) {

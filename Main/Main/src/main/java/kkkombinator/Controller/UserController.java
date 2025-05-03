@@ -1,6 +1,5 @@
 package kkkombinator.Controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import kkkombinator.Controller.Exceptions.UserNotFoundException;
 import kkkombinator.DAO.DTO.UserDTO;
 import kkkombinator.Service.UserServiceImpl;
@@ -8,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")

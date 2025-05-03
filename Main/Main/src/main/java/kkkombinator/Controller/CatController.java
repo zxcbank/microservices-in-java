@@ -1,6 +1,5 @@
 package kkkombinator.Controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import kkkombinator.DAO.DTO.CatDTO;
 import kkkombinator.Service.CatServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import kkkombinator.Controller.Exceptions.*;
-
-import java.util.Objects;
 
 
 @RestController
@@ -61,5 +58,4 @@ public class CatController {
                 .orElseThrow(() -> new CatNotFoundException("not found cat"));
         return catService.save(cat);
     }
-
 }

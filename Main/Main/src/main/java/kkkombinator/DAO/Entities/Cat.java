@@ -10,32 +10,24 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "cats")
+@Data
 public class Cat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column(nullable= false, name="name")
-    @Getter
-    @Setter
     private String name;
 
     @Column(name="birthDate")
-    @Getter
-    @Setter
     private LocalDate birthDate;
 
     @Column(name="CatType")
-    @Getter
     private String catType;
 
     @Column(name="Color")
-    @Getter
     private Color color;
 
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY) // Загрузка отложена до момента явного образения к полю
     @JoinColumn(name = "user_id")
     private User owner;

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionWrapper extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({CatNotFoundException.class, UserNotFoundException.class})
-    protected ResponseEntity<Object> handleNotFound(
+    protected ResponseEntity<Object> handleNotFound (
             Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, "smth not found",
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);

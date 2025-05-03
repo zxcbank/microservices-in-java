@@ -10,20 +10,16 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Entity
 @Table(name= "users")
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Column(name= "username")
-    @Getter
-    @Setter
     private String name;
 
     @Column(name = "birthDate")
-    @Getter
-    @Setter
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

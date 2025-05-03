@@ -1,6 +1,6 @@
 package kkkombinator.DAO.Entities;
 
 public enum Color {
-    BLACK,
+    BLACK, // TODO : https gets always null
     WHITE
 }

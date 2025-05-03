@@ -1,14 +1,12 @@
 package kkkombinator.Service;
 
-import kkkombinator.DAO.DTO.TransformEntities;
 import kkkombinator.DAO.DTO.CatDTO;
 import kkkombinator.DAO.Entities.Cat;
 import kkkombinator.DAO.Repo.CatRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,16 +23,13 @@ public class CatServiceImpl {
         this.transformer = transformer;
     }
 
-    @Bean
-    public static ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
+    @Transactional
     public CatDTO save(CatDTO entity) {
         return transformer.mapCatDto(catRepository.save(transformer.mapCat(entity)));
     }
 
     public Iterable<CatDTO> saveAll(Iterable<CatDTO> entities) {
+
         return transformer.mapCatDtos(catRepository.saveAll(transformer.mapCats(entities)));
     }
 
