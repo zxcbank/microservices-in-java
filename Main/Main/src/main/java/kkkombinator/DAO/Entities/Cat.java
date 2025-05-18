@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Entity
@@ -13,45 +13,33 @@ import java.util.Set;
 @Data
 public class Cat {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable= false, name="name")
+    @Column(nullable=false, name="name")
     private String name;
 
     @Column(name="birthDate")
     private LocalDate birthDate;
 
-    @Column(name="CatType")
+    @Column(name="catType")
     private String catType;
 
-    @Column(name="Color")
+    @Column(name="color")
     private Color color;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Загрузка отложена до момента явного образения к полю
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner", nullable = false)
     private User owner;
-
 
     @ManyToMany
     @JoinTable(
-            name = "cat_friends",
-            joinColumns = @JoinColumn(name = "cat_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
+            name = "catFriends",
+            joinColumns = @JoinColumn(name = "catId"),
+            inverseJoinColumns = @JoinColumn(name = "friendId")
     )
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Cat> friendCats = new HashSet<>();
-    // EqualsAndHashCode.Exclude  <=> аннотация для выполнения контракта с коллекией хэшсет, тем более там изменяемые поля, исключает в т ч это поле из hashCode
-    // ToString.Exclude <=> исключает поле из ToString (в данном случае возможно для отсутствия циклических ссылок по котам)
-
-    public Cat(String name, String catType, Color color, LocalDate date, User owner) {
-        this.name=name;
-        this.catType=catType;
-        this.color=color;
-        this.birthDate = date;
-        this.owner = owner;
-
-    }
+    private Collection<Cat> friendCatsIds = new HashSet<>();
 }

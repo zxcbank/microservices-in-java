@@ -4,7 +4,6 @@ import kkkombinator.Controller.Exceptions.UserNotFoundException;
 import kkkombinator.DAO.DTO.UserDTO;
 import kkkombinator.Service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,30 +12,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+    private final UserServiceImpl userService;
+    private final EntityMapper mapper;
 
-
-    private UserServiceImpl userService;
-
-    @GetMapping
+    @GetMapping("/")
     public Iterable<UserDTO> findAll() {
-        return userService.findAll();
+        return mapper.toUserDTOs(userService.findAll());
     }
 
 
     @GetMapping("/{id}")
     public UserDTO findById(@PathVariable Long id) {
-        return userService.findById(id)
+        var foundUser = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("user not found"));
+        return mapper.toUserDTO(foundUser);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO create(@RequestBody UserDTO user) {
-        return userService.save(user);
+        return mapper.toUserDTO(userService.save(mapper.toUser(user)));
     }
 
     @DeleteMapping("/{id}")
@@ -51,7 +46,6 @@ public class UserController {
 
         userService.findById(user.getId())
                 .orElseThrow(() -> new UserNotFoundException("user not found"));
-        return userService.save(user);
+        return mapper.toUserDTO(userService.save(mapper.toUser(user)));
     }
-
 }

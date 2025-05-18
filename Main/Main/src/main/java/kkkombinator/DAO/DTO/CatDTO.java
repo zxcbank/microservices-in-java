@@ -11,5 +11,5 @@ public class CatDTO {
     private String name;
     private String color;
     private Set<Long> myFriendsIds = new HashSet<>();
-    private  long userId;
+    private long userId;
 }

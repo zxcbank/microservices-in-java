@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Entity
@@ -16,27 +16,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name= "username")
+    @Column(name= "userName")
     private String name;
 
     @Column(name = "birthDate")
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Cat> cats = new HashSet<>();
-
-    public User(String name, LocalDate date) {
-        this.name = name;
-        birthDate = date;
-    }
-
-    public void addCat(Cat cat) {
-        this.cats.add(cat);
-        cat.setOwner(this);
-    }
-
-    public void deleteCat(Cat cat) {
-        this.cats.remove(cat);
-        cat.setOwner(null);
-    }
+    private Collection<Cat> myCatsIds = new HashSet<>();
 }

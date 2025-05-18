@@ -1,8 +1,10 @@
 package kkkombinator.Service;
 
-import kkkombinator.DAO.DTO.CatDTO;
+import kkkombinator.Controller.EntityMapper;
+import kkkombinator.Controller.Exceptions.UserNotFoundException;
 import kkkombinator.DAO.Entities.Cat;
 import kkkombinator.DAO.Repo.CatRepository;
+import kkkombinator.DAO.Repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,44 +12,48 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class CatServiceImpl {
 
     private CatRepository catRepository;
-    private TransformEntities transformer;
+    private EntityMapper transformer;
+    private UserRepository userRepository;
 
     @Autowired
-    public CatServiceImpl(kkkombinator.DAO.Repo.CatRepository catRepository, TransformEntities transformer) {
+    public CatServiceImpl(kkkombinator.DAO.Repo.CatRepository catRepository, UserRepository userRepository, EntityMapper transformer) {
         this.catRepository = catRepository;
+        this.userRepository = userRepository;
         this.transformer = transformer;
     }
 
-    @Transactional
-    public CatDTO save(CatDTO entity) {
-        return transformer.mapCatDto(catRepository.save(transformer.mapCat(entity)));
+    public Cat save(Cat entity) {
+        if (!userRepository.existsById(entity.getOwner().getId())) {
+            throw new UserNotFoundException("!!!!!");
+        }
+        return catRepository.save(entity);
     }
 
-    public Iterable<CatDTO> saveAll(Iterable<CatDTO> entities) {
-
-        return transformer.mapCatDtos(catRepository.saveAll(transformer.mapCats(entities)));
+    public Iterable<Cat> saveAll(Iterable<Cat> entities) {
+        return catRepository.saveAll(entities);
     }
 
-    public Optional<CatDTO> findById(Long id) {
-        Optional<Cat> optCat = catRepository.findById(id);
-        return optCat.map(cat -> transformer.mapCatDto(cat));
+    public Optional<Cat> findById(Long id) {
+        Optional<Cat> findedCat = catRepository.findById(id);
+        return findedCat;
     }
 
     public boolean existsById(Long id) {
         return catRepository.existsById(id);
     }
 
-    public Iterable<CatDTO> findAll() {
-        return transformer.mapCatDtos(catRepository.findAll());
+    public Iterable<Cat> findAll() {
+        return catRepository.findAll();
     }
 
-    public Iterable<CatDTO> findAllById(Iterable<Long> ids) {
-        return transformer.mapCatDtos(catRepository.findAllById(ids));
+    public Iterable<Cat> findAllById(Iterable<Long> ids) {
+        return catRepository.findAllById(ids);
     }
 
     public long count() {
@@ -58,16 +64,16 @@ public class CatServiceImpl {
         catRepository.deleteById(id);
     }
 
-    public void delete(CatDTO entity) {
-        catRepository.delete(transformer.mapCat(entity));
+    public void delete(Cat entity) {
+        catRepository.delete(entity);
     }
 
     public void deleteAllById(Iterable<Long> ids) {
         catRepository.deleteAllById(ids);
     }
 
-    public void deleteAll(Iterable<CatDTO> entities) {
-        catRepository.deleteAll(transformer.mapCats(entities));
+    public void deleteAll(Iterable<Cat> entities) {
+        catRepository.deleteAll(entities);
     }
 
     public void deleteAll() {

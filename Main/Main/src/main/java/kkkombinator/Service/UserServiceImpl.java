@@ -1,6 +1,6 @@
 package kkkombinator.Service;
 
-import kkkombinator.DAO.DTO.UserDTO;
+import jakarta.transaction.TransactionScoped;
 import kkkombinator.DAO.Entities.User;
 import kkkombinator.DAO.Repo.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,44 +10,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl {
 
     private UserRepository userRepository;
-    private TransformEntities transformer;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TransformEntities transformer) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.transformer = transformer;
     }
 
-    @Transactional
-    public UserDTO save(UserDTO entity) {
-
-        return transformer.mapUserDto(userRepository.save(transformer.mapUser(entity)));
+    public User save(User entity) {
+        return userRepository.save(entity);
     }
 
-    public Iterable<UserDTO> saveAll(Iterable<UserDTO> entities) {
-        return transformer.mapUserDtos(userRepository.saveAll(transformer.mapUsers(entities)));
+    public Iterable<User> saveAll(Iterable<User> entities) {
+        return userRepository.saveAll(entities);
     }
 
-    public Optional<UserDTO> findById(Long id) {
+    public Optional<User> findById(Long id) {
         Optional<User> optUser = userRepository.findById(id);
-        return optUser.map(user -> transformer.mapUserDto(optUser.get()));
+        return optUser.map(user -> optUser.get());
     }
 
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
     }
 
-    public Iterable<UserDTO> findAll() {
-        return transformer.mapUserDtos(userRepository.findAll());
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
     }
 
-    public Iterable<UserDTO> findAllById(Iterable<Long> ids) {
-        return transformer.mapUserDtos(userRepository.findAllById(ids));
+    public Iterable<User> findAllById(Iterable<Long> ids) {
+        return userRepository.findAllById(ids);
     }
 
     public long count() {
@@ -58,16 +55,16 @@ public class UserServiceImpl {
         userRepository.deleteById(id);
     }
 
-    public void delete(UserDTO entity) {
-        userRepository.delete(transformer.mapUser(entity));
+    public void delete(User entity) {
+        userRepository.delete(entity);
     }
 
     public void deleteAllById(Iterable<Long> ids) {
         userRepository.deleteAllById(ids);
     }
 
-    public void deleteAll(Iterable<UserDTO> entities) {
-        userRepository.deleteAll(transformer.mapUsers(entities));
+    public void deleteAll(Iterable<User> entities) {
+        userRepository.deleteAll(entities);
     }
 
     public void deleteAll() {
