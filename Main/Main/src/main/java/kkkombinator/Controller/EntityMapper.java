@@ -36,7 +36,7 @@ public class EntityMapper {
             catDataObject.setUserId(cat.getOwner().getId());
         }
 
-        catDataObject.setMyFriendsIds(cat.getFriendCatsIds().stream().map(Cat::getId).collect(Collectors.toSet()));
+        catDataObject.setMyFriendsIds(cat.getFriendCats().stream().map(Cat::getId).collect(Collectors.toSet()));
         return catDataObject;
     }
 
@@ -51,7 +51,7 @@ public class EntityMapper {
         Set<Long> friendIds = catDto.getMyFriendsIds() != null ?
                 catDto.getMyFriendsIds() : Collections.emptySet();
 
-        cat.setFriendCatsIds(friendIds.stream().map(x -> manager.find(Cat.class, x)).collect(Collectors.toSet()));
+        cat.setFriendCats(friendIds.stream().map(x -> manager.find(Cat.class, x)).collect(Collectors.toSet()));
         return cat;
     }
 

@@ -32,7 +32,7 @@ public class Cat {
     @JoinColumn(name = "owner", nullable = false)
     private User owner;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "catFriends",
             joinColumns = @JoinColumn(name = "catId"),
@@ -41,5 +41,5 @@ public class Cat {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Collection<Cat> friendCatsIds = new HashSet<>();
+    private Collection<Cat> friendCats = new HashSet<>();
 }

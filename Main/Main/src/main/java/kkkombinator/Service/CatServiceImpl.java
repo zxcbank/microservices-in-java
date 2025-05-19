@@ -32,7 +32,17 @@ public class CatServiceImpl {
         if (!userRepository.existsById(entity.getOwner().getId())) {
             throw new UserNotFoundException("!!!!!");
         }
+
+        for (Cat cat : entity.getFriendCats())
+            addFriend(entity, cat);
+
+
         return catRepository.save(entity);
+    }
+
+    public void addFriend(Cat cat1, Cat cat2) {
+        cat1.getFriendCats().add(cat2);
+        cat2.getFriendCats().add(cat1);
     }
 
     public Iterable<Cat> saveAll(Iterable<Cat> entities) {

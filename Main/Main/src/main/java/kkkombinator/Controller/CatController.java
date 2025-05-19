@@ -36,7 +36,6 @@ public class CatController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CatDTO create(@RequestBody CatDTO cat) {
-
         return mapper.toCatDTO(catService.save(mapper.toCat(cat)));
     }
 
@@ -51,7 +50,6 @@ public class CatController {
     @PutMapping
     public CatDTO updateCat(@RequestBody CatDTO cat) {
         catService.findById(cat.getId()).orElseThrow(() -> new CatNotFoundException("not found cat"));
-        catService.deleteById(cat.getId());
         return mapper.toCatDTO(catService.save(mapper.toCat(cat)));
     }
 }
