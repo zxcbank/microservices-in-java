@@ -1,24 +1,22 @@
-﻿package kkkombinator.DAO.Entities;
+package kkkombinator.DAO.Entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
 
 @Entity
 @Data
+@RequiredArgsConstructor
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public Role(String name) {
         this.name = name;
-    }
-
-    public Role() {
     }
 
     private String name;
@@ -27,10 +25,10 @@ public class Role {
 
     @ManyToMany
     @JoinTable(
-            name = "roles_privileges",
+            name = "rolesPrivileges",
             joinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"),
+                    name = "roleId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
-                    name = "privilege_id", referencedColumnName = "id"))
+                    name = "privilegeId", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
 }

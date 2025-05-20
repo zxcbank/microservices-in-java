@@ -10,4 +10,5 @@ public class UserDTO {
     private Long id;
     private String name;
     private Set<Long> myCatsIds = new HashSet<>();
+    private String password;
 }

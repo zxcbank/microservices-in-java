@@ -26,12 +26,9 @@ public class User {
     private Collection<Cat> myCatsIds = new HashSet<>();
 
     // Spring Security info
-    private String firstName;
-    private String lastName;
-    private String email;
+    @Column(name= "pass")
     private String password;
-    private boolean enabled;
-    private boolean tokenExpired;
+
 
     @ManyToMany
     @JoinTable(
@@ -40,5 +37,6 @@ public class User {
                     name = "userId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "roleId", referencedColumnName = "id"))
+//    @OneToMany(mappedBy = "roles", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Role> roles;
 }

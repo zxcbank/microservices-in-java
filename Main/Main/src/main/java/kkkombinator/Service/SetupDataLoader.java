@@ -1,4 +1,4 @@
-﻿package kkkombinator.Service;
+package kkkombinator.Service;
 
 import kkkombinator.DAO.Entities.Privilege;
 import kkkombinator.DAO.Entities.Role;
@@ -8,14 +8,22 @@ import kkkombinator.DAO.Repo.RoleRepository;
 import kkkombinator.DAO.Repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 
 @Component
 public class SetupDataLoader implements
@@ -53,12 +61,8 @@ public class SetupDataLoader implements
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         User user = new User();
-        user.setFirstName("TestFN");
-        user.setLastName("TestLN");
         user.setPassword(passwordEncoder.encode("testPass"));
-        user.setEmail("test@test.com");
         user.setRoles(Arrays.asList(adminRole));
-        user.setEnabled(true);
         userRepository.save(user);
 
         alreadySetup = true;
@@ -86,5 +90,28 @@ public class SetupDataLoader implements
             roleRepository.save(role);
         }
         return role;
+    }
+
+    @Bean
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        String hierarchy = "ROLE_ADMIN > ROLE_STAFF \n ROLE_STAFF > ROLE_USER";
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(x -> x.requestMatchers("/**").permitAll());
+
+        return http.build();
     }
 }

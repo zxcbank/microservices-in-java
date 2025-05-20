@@ -2,12 +2,15 @@ package kkkombinator.Service;
 
 import jakarta.transaction.TransactionScoped;
 import kkkombinator.DAO.Entities.User;
+import kkkombinator.DAO.Repo.RoleRepository;
 import kkkombinator.DAO.Repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Transactional
@@ -16,13 +19,23 @@ import java.util.Optional;
 public class UserServiceImpl {
 
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User save(User entity) {
+        return userRepository.save(entity);
+    }
+
+    public User register(User entity) {
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        entity.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return userRepository.save(entity);
     }
 

@@ -1,27 +1,25 @@
-﻿package kkkombinator.DAO.Entities;
+package kkkombinator.DAO.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToMany;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
 
 @Entity
+@Data
+@RequiredArgsConstructor
 public class Privilege {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public Privilege(String name) {
         this.name = name;
     }
 
-    public Privilege() {
-    }
-
+    @Column(name = "name")
     private String name;
 
     @ManyToMany(mappedBy = "privileges")

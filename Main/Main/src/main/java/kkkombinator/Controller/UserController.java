@@ -21,6 +21,7 @@ public class UserController {
     }
 
 
+
     @GetMapping("/{id}")
     public UserDTO findById(@PathVariable Long id) {
         var foundUser = userService.findById(id)
@@ -28,10 +29,10 @@ public class UserController {
         return mapper.toUserDTO(foundUser);
     }
 
-    @PostMapping
+    @PostMapping("/reg/")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO create(@RequestBody UserDTO user) {
-        return mapper.toUserDTO(userService.save(mapper.toUser(user)));
+        return mapper.toUserDTO(userService.register(mapper.toUser(user)));
     }
 
     @DeleteMapping("/{id}")
