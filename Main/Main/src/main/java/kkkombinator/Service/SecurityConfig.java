@@ -1,17 +1,19 @@
 package kkkombinator.Service;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 public class SecurityConfig {
@@ -23,21 +25,39 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/reg", "/users/login").permitAll()
-                        .requestMatchers("/users/").hasRole("USER")
-                        .anyRequest().authenticated()
-                );
-        http.csrf(AbstractHttpConfigurer::disable);
 
-//        http.exceptionHandling(handling -> handling
-//                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-//                .formLogin(form -> form.disable())
-//                .httpBasic(basic -> basic.disable());
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD).authenticated()
+                        .requestMatchers("/users/reg").permitAll()
+                        .requestMatchers("/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/cats/**").permitAll()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(Customizer.withDefaults());
+
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.DELETE, "/cats").hasRole("ADMIN")
+                .requestMatchers("/cats").authenticated()
+                .requestMatchers("/cats/**").authenticated()
+
+        );
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.DELETE, "/users").hasRole("ADMIN")
+                .requestMatchers("/users").authenticated()
+                .requestMatchers("/users/**").authenticated()
+
+        );
+
+        http.authorizeHttpRequests(auth -> auth.anyRequest().denyAll());
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(

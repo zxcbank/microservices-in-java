@@ -14,10 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service("userDetailsService")
 @Transactional
@@ -36,19 +33,14 @@ public class UserDetailsService implements org.springframework.security.core.use
     private RoleRepository roleRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-
-        User user = userRepository.findByName(name);
-        if (user == null) {
-            return new org.springframework.security.core.userdetails.User(
-                    " ", " ", true, true, true, true,
-                    getAuthorities(Arrays.asList(
-                            roleRepository.findByName("ROLE_USER"))));
-        }
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByName(username);
 
         return new org.springframework.security.core.userdetails.User(
-                user.getName(), user.getPassword(), true, true, true,
-                true, getAuthorities(user.getRoles()));
+                user.getName(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")) // Важно!
+        );
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(
