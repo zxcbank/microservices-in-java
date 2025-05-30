@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Main</name>
-	<description>lab III</description>
+	<description>lab IV-V</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -78,7 +78,11 @@
 			<artifactId>modelmapper-spring</artifactId>
 			<version>3.2.2</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -63,6 +63,7 @@ public class EntityMapper {
         userDataObject.setId(user.getId());
         userDataObject.setName(user.getName());
         userDataObject.setMyCatsIds(user.getMyCatsIds().stream().map(Cat::getId).collect(Collectors.toSet()));
+        userDataObject.setPassword(user.getPassword());
 
         return userDataObject;
     }
@@ -77,6 +78,7 @@ public class EntityMapper {
                 userDTO.getMyCatsIds() : Collections.emptySet();
 
         user.setMyCatsIds(catsIds.stream().map(x -> manager.find(Cat.class, x)).collect(Collectors.toSet()));
+        user.setPassword(userDTO.getPassword());
 
         return user;
     }

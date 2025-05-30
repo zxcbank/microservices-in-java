@@ -34,6 +34,7 @@ public class UserServiceImpl {
     }
 
     public User register(User entity) {
+        System.out.println(entity.toString());
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         entity.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return userRepository.save(entity);
