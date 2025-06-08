@@ -1,12 +1,14 @@
 package Config;
 
+import Entities.Cat;
 import Entities.User;
 import Models.CatDTO;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-
+import Service.CatService;
+import Service.CatMapper;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class KafkaMessagingService {
 
     private final CatMapper catMapper;
 
-    private final CatSerivce catSerivce;
+    private final CatService catSerivce;
 
     @Transactional
     @KafkaListener(topics = userCreateTopic, groupId = kafkaConsumerGroupId, properties = {"spring.json.value.default.type=java.Models.CatDTO"})
@@ -49,7 +51,7 @@ public class KafkaMessagingService {
     @Transactional
     @KafkaListener(topics = userFindAllTopic, groupId = kafkaConsumerGroupId, properties = {"spring.json.value.default.type=java.Models.CatDTO"})
     public List<CatDTO> findAllUserEvent(CatDTO dto) {
-        Iterable<User> res = catSerivce.findAll();
+        Iterable<Cat> res = catSerivce.findAll();
 
         return (List<CatDTO>) catMapper.toCatDTOs(res);
     }

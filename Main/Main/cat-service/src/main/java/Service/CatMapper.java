@@ -1,5 +1,7 @@
 package Service;
 
+import Entities.User;
+import Models.UserDTO;
 import jakarta.persistence.EntityManager;
 import Entities.Cat;
 import Models.CatDTO;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -48,5 +51,18 @@ public class CatMapper {
 
         cat.setFriendCats(friendIds.stream().map(x -> manager.find(Cat.class, x)).collect(Collectors.toSet()));
         return cat;
+    }
+
+    public Iterable<CatDTO> toCatDTOs(Iterable<Cat> cats) {
+        return StreamSupport.stream(cats.spliterator(), false)
+                .map(this::toCatDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<Cat> toCats(Iterable<CatDTO> catDTOs) {
+        Iterable<Cat> cats = StreamSupport.stream(catDTOs.spliterator(), false)
+                .map(this::toCat)
+                .collect(Collectors.toList());
+        return cats;
     }
 }
