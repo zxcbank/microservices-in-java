@@ -3,9 +3,9 @@ package Service;
 
 import Repository.RoleRepository;
 import Repository.UserRepository;
-import kkkombinator.Entities.Privilege;
-import kkkombinator.Entities.Role;
-import kkkombinator.Entities.User;
+import Entities.Privilege;
+import Entities.Role;
+import Entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +24,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     private UserRepository userRepository;
 
     @Autowired
-    private UserServiceImpl service;
+    private UserService service;
 
     @Autowired
     private MessageSource messages;

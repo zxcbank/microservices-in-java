@@ -30,8 +30,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/gateway_db
-    username: postgres
-    password: postgres
+    username: kafkaadmin
+    password: kafkaadmin
     driver-class-name: org.postgresql.Driver
 
   jpa:

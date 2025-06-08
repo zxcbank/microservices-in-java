@@ -1,12 +1,13 @@
 package Service;
 
+import Models.UserDTO;
 import jakarta.persistence.EntityManager;
-import kkkombinator.Entities.User;
-import kkkombinator.UserDTO;
+import Entities.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -15,41 +16,12 @@ import java.util.stream.StreamSupport;
 @Service
 public class UserMapper {
 
-//    private final ColorMapper colorMapper;
     private final EntityManager manager;
 
     public UserMapper(EntityManager manager) {
         this.manager = manager;
     }
 
-//    public CatDTO toCatDTO(Cat cat) {
-//        CatDTO catDataObject = new CatDTO();
-//        catDataObject.setId(cat.getId());
-//        catDataObject.setName(cat.getName());
-//        catDataObject.setColor(colorMapper.getStringFromColor(cat.getColor()));
-//
-//        if (cat.getOwner() != null) {
-//            catDataObject.setUserId(cat.getOwner().getId());
-//        }
-//
-//        catDataObject.setMyFriendsIds(cat.getFriendCats().stream().map(Cat::getId).collect(Collectors.toSet()));
-//        return catDataObject;
-//    }
-//
-//    public Cat toCat(CatDTO catDto) {
-//        Cat cat = new Cat();
-//        cat.setName(catDto.getName());
-//        cat.setId(catDto.getId());
-//
-//        cat.setOwner(manager.getReference(User.class, catDto.getUserId()));
-//        cat.setColor(colorMapper.getColorFromString(catDto.getColor()));
-//
-//        Set<Long> friendIds = catDto.getMyFriendsIds() != null ?
-//                catDto.getMyFriendsIds() : Collections.emptySet();
-//
-//        cat.setFriendCats(friendIds.stream().map(x -> manager.find(Cat.class, x)).collect(Collectors.toSet()));
-//        return cat;
-//    }
 
     public UserDTO toUserDTO(User user) {
         UserDTO userDataObject = new UserDTO();
@@ -58,7 +30,7 @@ public class UserMapper {
         }
         userDataObject.setId(user.getId());
         userDataObject.setName(user.getName());
-        userDataObject.setMyCatsIds(user.getMyCatsIds().stream().map(Cat::getId).collect(Collectors.toSet()));
+        userDataObject.setMyCatsIds(new HashSet<>(user.getMyCatsIds()));
         userDataObject.setPassword(user.getPassword());
 
         return userDataObject;
@@ -78,20 +50,6 @@ public class UserMapper {
 
         return user;
     }
-
-//    public Iterable<CatDTO> toCatDTOs(Iterable<Cat> cats) {
-//        Iterable<CatDTO> catDTOs = StreamSupport.stream(cats.spliterator(), false)
-//                .map(this::toCatDTO)
-//                .collect(Collectors.toList());
-//        return catDTOs;
-//    }
-//
-//    public Iterable<Cat> toCats(Iterable<CatDTO> catDtos) {
-//        Iterable<Cat> catDTOs = StreamSupport.stream(catDtos.spliterator(), false)
-//                .map(this::toCat)
-//                .collect(Collectors.toList());
-//        return catDTOs;
-//    }
 
     public Iterable<UserDTO> toUserDTOs(Iterable<User> users) {
         return StreamSupport.stream(users.spliterator(), false)
