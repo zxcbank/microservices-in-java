@@ -22,6 +22,6 @@ public class Privilege {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
+    @ManyToMany(mappedBy = "privileges", cascade = CascadeType.ALL)
     private Collection<Role> roles;
 }

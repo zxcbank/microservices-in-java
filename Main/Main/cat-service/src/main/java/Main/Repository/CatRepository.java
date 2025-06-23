@@ -1,7 +1,7 @@
-package Repository;
+package Main.Repository;
 
 
-import Entities.Cat;
+import Main.Entities.Cat;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

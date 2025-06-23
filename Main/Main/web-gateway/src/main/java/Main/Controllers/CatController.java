@@ -1,107 +1,84 @@
 package Main.Controllers;
 
 import Main.Models.CatDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import Main.Service.KafkaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.kafka.core.KafkaTemplate;
 //import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/v1/cats/")
+@RequiredArgsConstructor
 public class CatController {
-
-    //    private final AuthenticationManager authenticationManager;
-    private final ResponseAwaitService responseAwaitService;
-    private final KafkaTemplate<String, Object> producer;
-
-    @Autowired
-    public CatController(ResponseAwaitService responseAwaitService, KafkaTemplate<String, Object> producer) {
-        this.responseAwaitService = responseAwaitService;
-        this.producer = producer;
-    }
-
-    @Value("${spring.kafka.catCreateTopic}")
-    private String catCreateTopic;
-
-    @Value("${spring.kafka.catFindAllTopic}")
-    private String catFindAllTopic;
-
-    @Value("${spring.kafka.catUpdateTopic}")
-    private String catUpdateTopic;
-
-    @Value("${spring.kafka.catDeleteTopic}")
-    private String catDeleteTopic;
+    
+    private final KafkaService kafkaService;
 
     @GetMapping
-    public CompletableFuture<List<CatDTO>> findAll() {
-        String correlationId = UUID.randomUUID().toString();
-
-        CompletableFuture<List<CatDTO>> responseFuture =
-                responseAwaitService.waitForResponse(correlationId);
-
-        producer.send(
-                catFindAllTopic,
-                correlationId,
-                null
-        );
-
-        return responseFuture;
+    public List<CatDTO> findAll() throws ExecutionException, InterruptedException {
+        try {
+            return kafkaService.sendFindAllCatsMessage();
+        } catch (ExecutionException e) {
+            System.out.println("some exception in kafkaService (NOT EXECUTED)");
+        } catch (InterruptedException e) {
+            System.out.println("some exception in kafkaService (INTERRUPTED)");
+        }
+        return null;
     }
 
+    //    @PostMapping("/login")
+//    public CatDTO login(@RequestBody CatDTO dto) {
+//        Authentication auth = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        dto.getName(),
+//                        dto.getPassword()
+//                )
+//        );
+//        if (!auth.isAuthenticated()) {
+//            throw new UsernameNotFoundException("Invalid username or password");
+//        }
+//        SecurityContextHolder.getContext().setAuthentication(auth);
+//        return dto;
+//    }
+//
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CompletableFuture<CatDTO> create(@RequestBody CatDTO dto) {
-        String correlationId = UUID.randomUUID().toString();
-
-        CompletableFuture<CatDTO> responseFuture =
-                responseAwaitService.waitForResponse(correlationId);
-
-        producer.send(
-                catCreateTopic,
-                correlationId,
-                dto
-        );
-
-        return responseFuture;
+    public CatDTO create(@RequestBody CatDTO dto) {
+        try {
+            return kafkaService.sendSaveCatMessage(dto);
+        } catch (ExecutionException e) {
+            System.out.println("some exception in kafkaService (NOT EXECUTED)");
+        } catch (InterruptedException e) {
+            System.out.println("some exception in kafkaService (INTERRUPTED)");
+        }
+        return null;
     }
 
     @DeleteMapping("/{id}")
-    public CompletableFuture<CatDTO> delete(@PathVariable Long id) {
-        String correlationId = UUID.randomUUID().toString();
-        CatDTO dto = new CatDTO();
-        dto.setId(id);
+    public CatDTO delete(@PathVariable Long id) {
+        try {
+            return kafkaService.sendDeleteCatByIdMessage(id);
+        } catch (ExecutionException e) {
+            System.out.println("some exception in kafkaService (NOT EXECUTED)");
+        } catch (InterruptedException e) {
+            System.out.println("some exception in kafkaService (INTERRUPTED)");
+        }
+        return null;
 
-        CompletableFuture<CatDTO> responseFuture =
-                responseAwaitService.waitForResponse(correlationId);
-
-        producer.send(
-                catDeleteTopic,
-                correlationId,
-                dto
-        );
-
-        return responseFuture;
     }
 
     @PutMapping("/{id}")
-    public CompletableFuture<CatDTO> updateCat(@RequestBody CatDTO dto) {
-        String correlationId = UUID.randomUUID().toString();
-
-        CompletableFuture<CatDTO> responseFuture =
-                responseAwaitService.waitForResponse(correlationId);
-
-        producer.send(
-                catUpdateTopic,
-                correlationId,
-                dto
-        );
-
-        return responseFuture;
+    public CatDTO updateCat(@RequestBody CatDTO dto) {
+        try {
+            return kafkaService.sendUpdateCatByIdMessage(dto);
+        } catch (ExecutionException e) {
+            System.out.println("some exception in kafkaService (NOT EXECUTED)");
+        } catch (InterruptedException e) {
+            System.out.println("some exception in kafkaService (INTERRUPTED)");
+        }
+        return null;
     }
 }

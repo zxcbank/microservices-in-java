@@ -23,7 +23,7 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "rolesPrivileges",
             joinColumns = @JoinColumn(
@@ -31,4 +31,14 @@ public class Role {
             inverseJoinColumns = @JoinColumn(
                     name = "privilegeId", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
+
+    public void addPrivilege(Privilege privilege) {
+        this.privileges.add(privilege);
+        privilege.getRoles().add(this);
+    }
+
+    public void removePrivilege(Privilege privilege) {
+        this.privileges.remove(privilege);
+        privilege.getRoles().remove(this);
+    }
 }

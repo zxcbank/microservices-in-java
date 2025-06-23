@@ -1,8 +1,8 @@
-package Service;
+package Main.Service;
 
 
-import Entities.Cat;
-import Repository.CatRepository;
+import Main.Entities.Cat;
+import Main.Repository.CatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

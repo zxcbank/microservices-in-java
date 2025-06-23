@@ -69,13 +69,20 @@ services:
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cats-update --replication-factor 1 --partitions 1
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cats-find-all --replication-factor 1 --partitions 1
       
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cats-find-all-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cats-delete-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cats-update-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic cats-create-replies --replication-factor 1 --partitions 1
+      
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-create --replication-factor 1 --partitions 1
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-delete --replication-factor 1 --partitions 1
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-update --replication-factor 1 --partitions 1
       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-find-all --replication-factor 1 --partitions 1
       
-      
-      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-find-all-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-delete-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-update-replies --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic users-create-replies --replication-factor 1 --partitions 1
       
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka:29092 --list

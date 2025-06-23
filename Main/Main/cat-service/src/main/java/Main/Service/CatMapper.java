@@ -1,8 +1,8 @@
-package Service;
+package Main.Service;
 
 import jakarta.persistence.EntityManager;
-import Entities.Cat;
-import Models.CatDTO;
+import Main.Entities.Cat;
+import Main.Models.CatDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

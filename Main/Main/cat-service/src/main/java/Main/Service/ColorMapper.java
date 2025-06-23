@@ -1,7 +1,7 @@
-package Service;
+package Main.Service;
 
 
-import Entities.Color;
+import Main.Entities.Color;
 import org.springframework.stereotype.Service;
 
 @Service
