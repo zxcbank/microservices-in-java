@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>kkkombinator</groupId>
-	<artifactId>Main</artifactId>
+	<artifactId>lab5-root</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Main</name>
+	<name>root</name>
 	<description>lab IV-V</description>
 	<url/>
 	<licenses>
@@ -22,7 +22,6 @@
 		<developer/>
 	</developers>
 	<modules>
-		<module>common-dto</module>
 		<module>web-gateway</module>
 		<module>cat-service</module>
 		<module>user-service</module>

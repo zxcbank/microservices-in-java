@@ -5,11 +5,9 @@ import Entities.Cat;
 import Repository.CatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Transactional
@@ -18,7 +16,6 @@ import java.util.Optional;
 public class CatService {
 
     private CatRepository userRepository;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public CatService(CatRepository userRepository) {

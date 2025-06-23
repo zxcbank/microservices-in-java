@@ -28,8 +28,7 @@ public class Cat {
     @Column(name="color")
     private Color color;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner", nullable = false)
+    @Column(name = "owner_id", nullable = false)
     private Long ownerId;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

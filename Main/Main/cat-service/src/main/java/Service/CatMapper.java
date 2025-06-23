@@ -1,7 +1,5 @@
 package Service;
 
-import Entities.User;
-import Models.UserDTO;
 import jakarta.persistence.EntityManager;
 import Entities.Cat;
 import Models.CatDTO;
