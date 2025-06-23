@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -54,12 +55,12 @@ public class SetupDataLoader implements
         List<Privilege> adminPrivileges = Arrays.asList(
                 readPrivilege, writePrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
+        createRoleIfNotFound("ROLE_USER", Collections.singletonList(readPrivilege));
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         User user = new User();
         user.setPassword(passwordEncoder.encode("testPass"));
-        user.setRoles(Arrays.asList(adminRole));
+        user.setRoles(Collections.singletonList(adminRole));
         userRepository.save(user);
 
         alreadySetup = true;
@@ -90,9 +91,9 @@ public class SetupDataLoader implements
     }
 
     @Bean
-    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
         DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-        expressionHandler.setRoleHierarchy(roleHierarchy());
+        expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
     }
 

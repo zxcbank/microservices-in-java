@@ -13,6 +13,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -21,7 +22,6 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 public class KafkaService {
-
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -46,7 +46,6 @@ public class KafkaService {
     private final String userUpdateRepliesTopic = "${spring.kafka.userUpdateRepliesTopic}";
 
     private final String userCreateRepliesTopic = "${spring.kafka.userCreateRepliesTopic}";
-
 
     @Value("${spring.kafka.catCreateTopic}")
     private String catCreateTopic;
@@ -78,13 +77,11 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<List<UserDTO>> future = responseAwaitService.waitForResponse(correlationId);
+        CompletableFuture<List<UserDTO>> future = responseAwaitService.waitForCollectionResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("Result:" + result);
-            } else {
-                System.out.println("some exception in kafkaService");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while FindAllUser");
             }
         });
         return future.get();
@@ -93,7 +90,6 @@ public class KafkaService {
     public UserDTO sendSaveUserMessage(UserDTO dto) throws ExecutionException, InterruptedException {
         String correlationId = UUID.randomUUID().toString();
 
-
         Message<?> message = MessageBuilder.withPayload(dto)
                 .setHeader(KafkaHeaders.CORRELATION_ID, correlationId)
                 .setHeader(KafkaHeaders.TOPIC, userCreateTopic)
@@ -101,13 +97,11 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<UserDTO> future = responseAwaitService.waitForResponseR(correlationId);
+        CompletableFuture<UserDTO> future = responseAwaitService.waitForElementResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("some exception in kafkaService");
-            } else {
-                System.out.println("some exception in kafkaService while CreateById");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while CreateUserById");
             }
         });
         return future.get();
@@ -125,13 +119,11 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<UserDTO> future = responseAwaitService.waitForResponseR(correlationId);
+        CompletableFuture<UserDTO> future = responseAwaitService.waitForElementResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("some exception in kafkaService");
-            } else {
-                System.out.println("some exception in kafkaService while DeleteById");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while DeleteUserById");
             }
         });
         return future.get();
@@ -147,52 +139,40 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<UserDTO> future = responseAwaitService.waitForResponseR(correlationId);
+        CompletableFuture<UserDTO> future = responseAwaitService.waitForElementResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("some exception in kafkaService");
-            } else {
-                System.out.println("some exception in kafkaService while UpdateById");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while UpdateUserById");
             }
         });
         return future.get();
     }
 
     @KafkaListener(topics = userFindAllRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleUserFindAllResponse(
-            Message<List<UserDTO>> message
-    ) {
+    public void handleUserFindAllResponse(Message<List<UserDTO>> message) {
 
         responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
     }
 
     @KafkaListener(topics = userDeleteRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleUserDeleteResponse(
-            Message<UserDTO> message
-    ) {
+    public void handleUserDeleteResponse(Message<UserDTO> message) {
 
         responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
     }
 
     @KafkaListener(topics = userUpdateRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleUserUpdateResponse(
-            Message<UserDTO> message
-    ) {
+    public void handleUserUpdateResponse(Message<UserDTO> message) {
 
         responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
     }
 
     @KafkaListener(topics = userCreateRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleUserCreateResponse(
-            Message<UserDTO> message
-    ) {
+    public void handleUserCreateResponse(Message<UserDTO> message) {
 
         responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
     }
 
-
-    //----------------------------
 
     public List<CatDTO> sendFindAllCatsMessage() throws ExecutionException, InterruptedException {
         String correlationId = UUID.randomUUID().toString();
@@ -204,13 +184,11 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<List<CatDTO>> future = responseAwaitService.waitForResponse(correlationId);
+        CompletableFuture<List<CatDTO>> future = responseAwaitService.waitForCollectionResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("Result:" + result);
-            } else {
-                System.out.println("some exception in kafkaService");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while FindAllCats");
             }
         });
         return future.get();
@@ -219,7 +197,6 @@ public class KafkaService {
     public CatDTO sendSaveCatMessage(CatDTO dto) throws ExecutionException, InterruptedException {
         String correlationId = UUID.randomUUID().toString();
 
-
         Message<?> message = MessageBuilder.withPayload(dto)
                 .setHeader(KafkaHeaders.CORRELATION_ID, correlationId)
                 .setHeader(KafkaHeaders.TOPIC, catCreateTopic)
@@ -227,13 +204,11 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<CatDTO> future = responseAwaitService.waitForResponseR(correlationId);
+        CompletableFuture<CatDTO> future = responseAwaitService.waitForElementResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("some exception in kafkaService");
-            } else {
-                System.out.println("some exception in kafkaService while CreateById");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while CreateCatById");
             }
         });
         return future.get();
@@ -244,7 +219,6 @@ public class KafkaService {
         CatDTO dto = new CatDTO();
         dto.setId(Id);
 
-
         Message<?> message = MessageBuilder.withPayload(dto)
                 .setHeader(KafkaHeaders.CORRELATION_ID, correlationId)
                 .setHeader(KafkaHeaders.TOPIC, catDeleteTopic)
@@ -252,13 +226,11 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<CatDTO> future = responseAwaitService.waitForResponseR(correlationId);
+        CompletableFuture<CatDTO> future = responseAwaitService.waitForElementResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("some exception in kafkaService");
-            } else {
-                System.out.println("some exception in kafkaService while DeleteById");
+            if (ex != null) {
+                System.out.println("some exception in kafkaService while DeleteCatById");
             }
         });
         return future.get();
@@ -267,7 +239,6 @@ public class KafkaService {
     public CatDTO sendUpdateCatByIdMessage(CatDTO dto) throws ExecutionException, InterruptedException {
         String correlationId = UUID.randomUUID().toString();
 
-
         Message<?> message = MessageBuilder.withPayload(dto)
                 .setHeader(KafkaHeaders.CORRELATION_ID, correlationId)
                 .setHeader(KafkaHeaders.TOPIC, catUpdateTopic)
@@ -275,47 +246,37 @@ public class KafkaService {
 
         kafkaTemplate.send(message);
 
-        CompletableFuture<CatDTO> future = responseAwaitService.waitForResponseR(correlationId);
+        CompletableFuture<CatDTO> future = responseAwaitService.waitForElementResponse(correlationId);
 
         future.whenComplete((result, ex) -> {
-            if (ex == null) {
-//                System.out.println("some exception in kafkaService");
-            } else {
-                System.out.println("some exception in kafkaService while UpdateById");
+            if (ex != null) {
+                System.err.println("some exception in kafkaService while UpdateById");
             }
         });
         return future.get();
     }
 
     @KafkaListener(topics = catFindAllRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleCatFindAllResponse(
-            Message<List<CatDTO>> message
-    ) {
+    public void handleCatFindAllResponse(Message<List<CatDTO>> message) {
 
-        responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
+        responseAwaitService.completeResponse(Objects.requireNonNull(message.getHeaders().get(KafkaHeaders.CORRELATION_ID)).toString(), message.getPayload());
     }
 
     @KafkaListener(topics = catDeleteRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleCatDeleteResponse(
-            Message<CatDTO> message
-    ) {
+    public void handleCatDeleteResponse(Message<CatDTO> message) {
 
-        responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
+        responseAwaitService.completeResponse(Objects.requireNonNull(message.getHeaders().get(KafkaHeaders.CORRELATION_ID)).toString(), message.getPayload());
     }
 
     @KafkaListener(topics = catUpdateRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleCatUpdateResponse(
-            Message<CatDTO> message
-    ) {
+    public void handleCatUpdateResponse(Message<CatDTO> message) {
 
-        responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
+        responseAwaitService.completeResponse(Objects.requireNonNull(message.getHeaders().get(KafkaHeaders.CORRELATION_ID)).toString(), message.getPayload());
     }
 
     @KafkaListener(topics = catCreateRepliesTopic, containerFactory = "kafkaListenerContainerFactory")
-    public void handleCatCreateResponse(
-            Message<CatDTO> message
-    ) {
+    public void handleCatCreateResponse(Message<CatDTO> message) {
 
-        responseAwaitService.completeResponse(message.getHeaders().get(KafkaHeaders.CORRELATION_ID).toString(), message.getPayload());
+        responseAwaitService.completeResponse(Objects.requireNonNull(message.getHeaders().get(KafkaHeaders.CORRELATION_ID)).toString(), message.getPayload());
     }
 }

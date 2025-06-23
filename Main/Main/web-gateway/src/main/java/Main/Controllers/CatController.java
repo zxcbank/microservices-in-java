@@ -4,7 +4,6 @@ import Main.Models.CatDTO;
 import Main.Service.KafkaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-//import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,11 +13,11 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/v1/cats/")
 @RequiredArgsConstructor
 public class CatController {
-    
+
     private final KafkaService kafkaService;
 
     @GetMapping
-    public List<CatDTO> findAll() throws ExecutionException, InterruptedException {
+    public List<CatDTO> findAll() {
         try {
             return kafkaService.sendFindAllCatsMessage();
         } catch (ExecutionException e) {

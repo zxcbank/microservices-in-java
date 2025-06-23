@@ -20,7 +20,7 @@ public class UserController {
     private final KafkaService kafkaService;
 
     @GetMapping
-    public List<UserDTO> findAll() throws ExecutionException, InterruptedException {
+    public List<UserDTO> findAll() {
         try {
             return kafkaService.sendFindAllUsersMessage();
         } catch (ExecutionException e) {
@@ -31,7 +31,7 @@ public class UserController {
         return null;
     }
 
-//    @PostMapping("/login")
+    //    @PostMapping("/login")
 //    public UserDTO login(@RequestBody UserDTO dto) {
 //        Authentication auth = authenticationManager.authenticate(
 //                new UsernamePasswordAuthenticationToken(

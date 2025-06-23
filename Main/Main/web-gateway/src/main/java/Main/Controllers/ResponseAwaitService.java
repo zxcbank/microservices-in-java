@@ -20,29 +20,27 @@ public class ResponseAwaitService<R> {
     @Value("${spring.kafka.timeout}")
     private Long timeout;
 
-    public CompletableFuture<List<R>> waitForResponse(String correlationId) {
+    public CompletableFuture<List<R>> waitForCollectionResponse(String correlationId) {
         CompletableFuture<List<R>> future = new CompletableFuture<>();
         pendingCollectionResponses.put(correlationId, future);
 
-        future.orTimeout(timeout, TimeUnit.SECONDS)
-                .exceptionally(ex -> {
-                    pendingCollectionResponses.remove(correlationId);
-                    throw new RuntimeException("Timeout waiting for response");
-                });
+        future.orTimeout(timeout, TimeUnit.SECONDS).exceptionally(ex -> {
+            pendingCollectionResponses.remove(correlationId);
+            throw new RuntimeException("Timeout waiting for response");
+        });
 
         return future;
     }
 
-    public CompletableFuture<R> waitForResponseR(String correlationId) {
+    public CompletableFuture<R> waitForElementResponse(String correlationId) {
 
         CompletableFuture<R> future = new CompletableFuture<>();
         pendingResponses.put(correlationId, future);
 
-        future.orTimeout(timeout, TimeUnit.SECONDS)
-                .exceptionally(ex -> {
-                    pendingResponses.remove(correlationId);
-                    throw new RuntimeException("Timeout waiting for response");
-                });
+        future.orTimeout(timeout, TimeUnit.SECONDS).exceptionally(ex -> {
+            pendingResponses.remove(correlationId);
+            throw new RuntimeException("Timeout waiting for response");
+        });
 
         return future;
     }

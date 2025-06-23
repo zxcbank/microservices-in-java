@@ -20,17 +20,20 @@ import java.util.*;
 @Transactional
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
 
-    @Autowired
-    private MessageSource messages;
+    private final MessageSource messages;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    public UserDetailsService(RoleRepository roleRepository, UserRepository userRepository, MessageSource messages, UserService service) {
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.messages = messages;
+        this.service = service;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

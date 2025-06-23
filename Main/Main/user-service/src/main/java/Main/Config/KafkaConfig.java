@@ -21,7 +21,7 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    private String groupId = "users-consumer-group";
+    private final String groupId = "users-consumer-group";
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
